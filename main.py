@@ -31,9 +31,9 @@ def calculate_accuracy(retrieval_results, labels):
     total = 0
     
     for idx, retrieved_indices in enumerate(retrieval_results):
-        #print("retrieved_indices",retrieved_indices)
-        #print("labels[retrieved_indices]",labels[retrieved_indices])
-        #print("labels[idx]",labels[idx])
+        print("retrieved_indices",retrieved_indices)
+        print("labels[retrieved_indices]",labels[retrieved_indices])
+        print("labels[idx]",labels[idx])
         if labels[idx] in labels[retrieved_indices]:
             #print(correct)
             correct += 1
@@ -42,19 +42,14 @@ def calculate_accuracy(retrieval_results, labels):
     accuracy = correct / total
     return accuracy
 
-def evaluate_novel_classes(attribute_embeddings, novel_test_loader):
+def evaluate_novel_classes(attribute_embeddings, test_loader):
     image_embeddings = []
     image_labels = []
 
     # Extract image embeddings and tags from the loader
-    for embeddings, labels in novel_test_loader:
-        #print(embeddings.size())
-        #print(labels)
+    for embeddings, labels in test_loader:
         image_embeddings.append(embeddings)
         image_labels.append(labels)
-
-    #print("image_embeddings",image_embeddings)
-    #print("image_labels",image_labels)
 
     image_embeddings = torch.cat(image_embeddings, dim=0)
     image_labels = torch.cat(image_labels, dim=0)
@@ -65,23 +60,23 @@ def evaluate_novel_classes(attribute_embeddings, novel_test_loader):
     #print(f"Sample embeddings: {image_embeddings}")
     #print(f"Sample labels: {image_labels}")
 
-    # 将 image_embeddings 映射到 attribute_embeddings 空间
+    # Map image_embeddings to attribute_embeddings space
     attribute_embeddings_tensor = attribute_embeddings.clone().detach()
     attribute_embeddings_tensor = attribute_embeddings_tensor.float()
-    novel_embeddings = torch.matmul(image_embeddings, attribute_embeddings_tensor.t())
+    imagewithattributes_embeddings = torch.matmul(image_embeddings, attribute_embeddings_tensor.t())
     #print("attribute_embeddings_tensor",attribute_embeddings_tensor.size())
     #print("novel_embeddings",novel_embeddings.size())
 
-    # 计算余弦相似度矩阵
+    # Calculate cosine similarity matrix
     if with_attributes:
-        similarity_matrix = calculate_cosine_similarity(novel_embeddings)
+        similarity_matrix = calculate_cosine_similarity(imagewithattributes_embeddings)
     else:
         similarity_matrix = calculate_cosine_similarity(image_embeddings)
 
-    # 图像检索，获取前 1 个最相似的图像（可以根据需要调整 top_k）
+    # Image retrieval, get the top 1 most similar image (top_k can be adjusted as needed)
     retrieval_results = image_retrieval(similarity_matrix, top_k=1)
 
-    # 计算准确率
+    # Calculate accuracy
     accuracy = calculate_accuracy(retrieval_results, image_labels)
     #print(f"Distribution of labels in test set: {torch.Size(image_labels)}")
 
@@ -116,7 +111,8 @@ def main(cfg):
         score_train_loader, score_test_loader = get_score_dataloader(cfg, attributes_embeddings)
         best_model, best_acc = train_model(cfg, cfg['epochs'], model, score_train_loader, score_test_loader)
     '''
-    _,novel_test_loader,_ =get_feature_dataloader(cfg)
+    _,_,novel_test_loader,_ =get_feature_dataloader(cfg)
+   
     accuracy = evaluate_novel_classes(attributes_embeddings, novel_test_loader)
     print(f"Accuracy: {accuracy}")
     # Additional suggestions to troubleshoot accuracy issues

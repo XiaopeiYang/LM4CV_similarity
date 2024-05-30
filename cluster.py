@@ -83,7 +83,7 @@ def cluster(cfg):
 
             model = get_model(cfg, cfg['linear_model'], input_dim=attribute_embeddings.shape[-1], output_dim=get_output_dim(cfg['dataset']))
             #train_loader, test_loader = get_feature_dataloader(cfg)
-            base_train_loader, base_test_loader,_ = get_feature_dataloader(cfg)
+            base_train_loader, base_test_loader,_,_ = get_feature_dataloader(cfg)
             if cfg['mahalanobis']:
                 print("mahalanobis:")
                 best_model, best_acc = train_model(cfg, cfg['linear_epochs'], model, base_train_loader, base_test_loader, regularizer='mahalanobis', configs=configs)

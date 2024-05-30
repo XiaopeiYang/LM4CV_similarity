@@ -1,0 +1,72 @@
+image without attributes
+testing on all classes
+Accuracy: 0.8816666666666667
+
+image  with 16 attributes
+testing on all classes
+Accuracy: 0.7833333333333333
+
+fix_patches  with 16 attributes
+testing on all classes
+Accuracy: 0.8080952380952381
+
+
+image without attributes
+testing on novel classes
+Accuracy: 0.8966666666666666
+
+image with 16 attributes
+testing on novel classes
+Accuracy: 0.7866666666666666
+
+image with 64 attributes
+testing on novel classes
+Accuracy: 0.8366666666666667
+
+image with 128 attributes
+testing on novel classes
+Accuracy: 0.8666666666666667
+
+image with 64 attributes
+testing on novel classes(2 base/4 novel)
+Accuracy: 0.88
+
+
+image with 128 attributes
+testing on novel classes(2 base/4 novel)
+Accuracy: 0.8925
+
+image with 64 attributes(few-shot)
+testing on novel classes
+Accuracy: 0.8333333333333334
+
+
+
+
+image without attributes
+testing on novel classes
+Accuracy: 0.8966666666666666
+
+image without attributes
+testing on whole classes
+Accuracy: 0.8816666666666667
+
+image with 64 attributes
+testing on novel classes
+Accuracy: 0.8366666666666667
+
+image with 64 attributes(few-shot)
+testing on novel classes
+Accuracy: 0.8333333333333334
+
+image with 64 attributes
+testing on whole classes
+Accuracy: 0.8266666666666667
+
+image with 64 attributes
+testing on novel classes(2 base/4 novel)
+Accuracy: 0.88
+
+image with 64 attributes
+testing on novel classes(4 base/2 novel)
+Accuracy: 0.96

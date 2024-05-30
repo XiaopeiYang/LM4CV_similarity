@@ -11,6 +11,7 @@ import random
 IMP_SAMP_fix = True
 use_patches = False
 n_crops_per_image = 7
+use_few_shot = False
 
 
 imp_samp_params = {
@@ -106,7 +107,7 @@ def remap_labels(labels, class_map):
     remapped_labels = [class_map[label] for label in labels]
     return remapped_labels
 
-def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: int = 42):
+def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: int = 42, few_shot: int = 10):
     # Check if paths exist
     assert os.path.exists(json_file), f"JSON file: {json_file} does not exist."
     assert os.path.exists(root), f"Root path: {root} does not exist."
@@ -133,29 +134,7 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
         full_path = os.path.join(root, item[0])
         test_images_paths.append(full_path)
         test_images_labels.append(item[1])
-
-    if use_patches:
-        # If using patches, generate multiple labels for each image       
-        # Process training data
-        patched_train_paths = []
-        patched_train_labels = []
-        for item in data['train']:
-            full_path = os.path.join(root, item[0])
-            patched_train_paths.extend([full_path] * n_crops_per_image)
-            patched_train_labels.extend([item[1]] * n_crops_per_image)
-        train_images_paths = patched_train_paths
-        train_images_labels = patched_train_labels
-
-        # Process test data
-        patched_test_paths = []
-        patched_test_labels = []
-        for item in data['test']:
-            full_path = os.path.join(root, item[0])
-            patched_test_paths.extend([full_path] * n_crops_per_image)
-            patched_test_labels.extend([item[1]] * n_crops_per_image)
-        test_images_paths = patched_test_paths
-        test_images_labels = patched_test_labels
-
+    
     # Split the classes into base and novel
     all_labels = list(set(train_images_labels))
     random.seed(seed)
@@ -179,12 +158,28 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
     base_train_paths, base_train_labels = [], []
     base_test_paths, base_test_labels = [], []
     novel_test_paths, novel_test_labels = [], []
+            
+    if use_few_shot: 
+        # Collect few-shot samples for training
+        base_class_samples = {label: [] for label in range(num_base_classes)}
     
-    #print("base, novel",base_classes,novel_classes)
-    for path, label in zip(train_images_paths, remapped_train_labels):
-        if label < num_base_classes:
-            base_train_paths.append(path)
-            base_train_labels.append(label)
+        #print("base, novel",base_classes,novel_classes)
+        for path, label in zip(train_images_paths, remapped_train_labels):
+            if label < num_base_classes:
+                base_class_samples[label].append((path, label))
+                
+        for label in base_class_samples:
+            samples = base_class_samples[label]
+            random.shuffle(samples)
+            few_shot_samples = samples[:few_shot]
+            for path, label in few_shot_samples:
+                base_train_paths.append(path)
+                base_train_labels.append(label)
+    else:
+        for path, label in zip(train_images_paths, remapped_train_labels):
+            if label < num_base_classes:
+                base_train_paths.append(path)
+                base_train_labels.append(label)
 
     for path, label in zip(test_images_paths, remapped_test_labels):
         if label < num_base_classes:
@@ -197,7 +192,7 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
     #print(f"{len(base_test_paths)} images for base testing.")
     #print(f"{len(novel_test_paths)} images for novel testing.")
 
-    return (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels), base_classes, novel_classes
+    return (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels),  (test_images_paths, test_images_labels),base_classes, novel_classes
 
 
 
@@ -225,11 +220,13 @@ class FeatureDataset(torch.utils.data.Dataset):
         #print("target:", targets)
         self.targets = torch.tensor(targets)
         self.group_array = group_array
+        print("self.features[idx]",self.features.size())
+        print("self.targets[idx]",self.targets.size()) 
 
     def __getitem__(self, idx):
         if self.group_array is not None:
             return self.features[idx], self.targets[idx], self.group_array[idx]
-        #print("self.features[idx]",self.features[idx])
+           
         return self.features[idx], self.targets[idx]
 
     def __len__(self):

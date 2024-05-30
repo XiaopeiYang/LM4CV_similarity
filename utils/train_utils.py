@@ -83,24 +83,29 @@ def get_feature_dataloader(cfg):
     test_features = get_image_embeddings(cfg, cfg['dataset'], model, test_loader, 'test')
     '''
     #for fungi
-    base_train_loader,base_test_loader, novel_test_loader = get_image_dataloader(cfg['dataset'], preprocess)
+    base_train_loader,base_test_loader, novel_test_loader,all_test_loader = get_image_dataloader(cfg['dataset'], preprocess)
 
     base_train_features = get_image_embeddings(cfg, cfg['dataset'], model, base_train_loader, 'base_train')
     base_test_features = get_image_embeddings(cfg, cfg['dataset'], model, base_test_loader, 'base_test')
     novel_test_features = get_image_embeddings(cfg, cfg['dataset'], model, novel_test_loader, 'novel_test')
+    all_test_features = get_image_embeddings(cfg, cfg['dataset'], model, all_test_loader, 'all_test')
     ####
     
     if cfg['dataset'] == 'fungi':
-        base_train_labels,base_test_labels,novel_test_labels = get_labels(cfg['dataset'])
+        base_train_labels,base_test_labels,novel_test_labels,test_images_labels = get_labels(cfg['dataset'])
         base_train_score_dataset = FeatureDataset(base_train_features, base_train_labels)
         base_test_score_dataset = FeatureDataset(base_test_features, base_test_labels)
         novel_test_score_dataset = FeatureDataset(novel_test_features, novel_test_labels)
+        all_test_score_dataset = FeatureDataset(all_test_features, test_images_labels)
+        print("novel_test_labels",novel_test_labels)  
+        
 
     base_train_loader = DataLoader(base_train_score_dataset, batch_size=cfg['batch_size'], shuffle=True)
     base_test_loader = DataLoader(base_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
     novel_test_loader = DataLoader(novel_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
+    all_test_loader = DataLoader(all_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
 
-    return base_train_loader,base_test_loader,novel_test_loader
+    return base_train_loader,base_test_loader,novel_test_loader,all_test_loader
 
 
 def get_score_dataloader(cfg, attribute_embeddings):

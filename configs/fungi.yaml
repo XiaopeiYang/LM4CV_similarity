@@ -6,9 +6,9 @@ model_type: clip
 model_size: ViT-B/32
 mahalanobis: True
 division_power: 2
-linear_epochs: 53
+linear_epochs: 20 #50
 reinit: False # True/False
-num_attributes: 16 # [16, 32, 64, 128, 256, 512]
+num_attributes: 64 # [16, 32, 64, 128, 256, 512]
 seed: 1
 
 # optimization parameters
