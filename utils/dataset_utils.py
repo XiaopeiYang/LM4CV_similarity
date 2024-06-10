@@ -37,8 +37,10 @@ with open(f'{args.config}', "r") as stream:
 
 json_file = cfg['json_file']
 ROOT = cfg['ROOT']
-use_patches = False
-n_crops_per_image = 7
+use_patches = cfg['use_patches']
+n_crops_per_image = cfg['n_crops_per_image']
+#use_patches = False
+#n_crops_per_image = 7
 
 def clean_label(true_labels):
     true_labels = np.array(true_labels)
@@ -86,8 +88,10 @@ def get_image_dataloader(dataset, preprocess, preprocess_eval=None, shuffle=Fals
     print(f"{len(test_images_labels)} images for all testing.")
     print("base_classes", base_classes)
     print("novel_classes", novel_classes)
-    print("novel_test_paths", novel_test_paths)
-    print("novel_test_labels", novel_test_labels)
+    ########################################
+    #print("novel_test_paths", novel_test_paths)
+    #print("novel_test_labels", novel_test_labels)
+    ########################################
     # Create datasets
     base_trainset = FungiSmall(images_path=base_train_paths, images_class=base_train_labels, transform=preprocess)
     base_testset = FungiSmall(images_path=base_test_paths, images_class=base_test_labels, transform=preprocess)

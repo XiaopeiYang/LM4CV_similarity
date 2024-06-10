@@ -70,3 +70,5 @@ Accuracy: 0.88
 image with 64 attributes
 testing on novel classes(4 base/2 novel)
 Accuracy: 0.96
+
+

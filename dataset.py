@@ -6,13 +6,30 @@ import imp_samp
 import os
 import json
 import random
- 
+import argparse
+import yaml 
 
-IMP_SAMP_fix = True
-use_patches = False
-n_crops_per_image = 7
-use_few_shot = False
-
+def parse_config():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config",
+                        default='./configs/fungi.yaml',
+                        help='configurations for training')
+    return parser.parse_args()
+args = parse_config()
+with open(f'{args.config}', "r") as stream:
+    try:
+        cfg = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+        
+#IMP_SAMP_fix = True
+#use_patches = False
+#n_crops_per_image = 7
+#use_few_shot = False
+IMP_SAMP_fix = cfg['IMP_SAMP_fix']
+use_patches = cfg['use_patches']
+use_few_shot = cfg['use_few_shot']
+n_crops_per_image = cfg['n_crops_per_image']
 
 imp_samp_params = {
     "patch_size": 512,
