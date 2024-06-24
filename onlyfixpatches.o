@@ -1,0 +1,77 @@
+{'dataset': 'fungi', 'attributes': 'fungi', 'cluster_feature_method': 'linear', 'model_type': 'clip', 'model_size': 'ViT-B/32', 'mahalanobis': True, 'division_power': 2, 'linear_epochs': 50, 'reinit': False, 'num_attributes': 128, 'seed': 1, 'lr': 0.001, 'batch_size': 4, 'epochs': 125, 'linear_model': ['linear', 'linear'], 'score_model': ['linear'], 'json_file': '/export/home/ra79nod/proj/LM4CV_similarity/data/fungi/split_zhou_Fungi.json', 'ROOT': '/export/group/datasets/microbiology/images_png', 'use_voting': False, 'with_attributes': True, 'evaluate_with_novel_classes': False, 'IMP_SAMP_fix': True, 'use_patches': True, 'n_crops_per_image': 7, 'use_few_shot': False, 'umap': True}
+num_attributes:  128
+200 images for base training.
+200 images for base testing.
+400 images for novel testing.
+600 images for all testing.
+base_classes [1, 4]
+novel_classes [0, 2, 3, 5]
+Extract image features...
+Extract image features...
+Extract image features...
+Extract image features...
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([2800, 512])
+self.targets[idx] torch.Size([2800])
+self.features[idx] torch.Size([4200, 512])
+self.targets[idx] torch.Size([4200])
+mahalanobis:
+Epoch [0], Best accuracy: 80.28571319580078, Last accuracy: 80.28571319580078
+Epoch [10], Best accuracy: 83.14286041259766, Last accuracy: 80.0714340209961
+Epoch [20], Best accuracy: 84.92857360839844, Last accuracy: 79.5
+Epoch [30], Best accuracy: 85.92857360839844, Last accuracy: 85.85713958740234
+Epoch [40], Best accuracy: 87.0714340209961, Last accuracy: 87.0
+selected_attributions: ['cell membranes are thin and continuous', 'mycelium growth, branching structures, no compound effect', 'clumped masses with irregular borders', 'swelling spores of different shapes, from round to ovoidal, irregular distribution of germination tubes', 'appear as a cloudy or hazy mass', 'cellular structures appear static with no dynamic changes', 'thin, rod-shaped bacteria', 'small, round yeast cells with dark centers', 'spores remain closed without signs of opening', 'short, can have more than one branching event, can be either straight or curly', 'swelling, round, larger than usual', 'no visible organelles or structures', 'individual crystals show elongated, needle-like shapes', 'zero to one tube per spore', 'overall arrangement gives a compact, tightly packed look', 'overall static appearance with minimal or no activity', 'thick, dense networks with numerous nodes', 'particles cluster together in dense aggregates', 'ends of filaments taper off delicately', 'clusters of smaller crystals surround larger central pieces', 'absence of growth medium penetration by any hyphal structures', 'no visible budding or fragmentation', 'several tubes per spore, tubes grow from a few localized positions on spore surface, often two germination events at 180 degree', 'thick, flat plates with irregular edges', 'large, irregularly shaped yeast cells with dark edges', 'spores exist only as a part of a very large overlapping branching structure', 'pearl necklace phenotype, germination tubes look like pebbles', 'crystalline structures with irregular shapes', 'small and round, often hard to detect because covered by branching tubes', 'tubes look like a line of pebbles along a necklace, short, thicker than usual', 'several tubes per spore, tubes distribution and growth is chaotic, tubes tend to create agglomerates around the spore', 'spore clusters maintain a compact arrangement', 'branching, filamentous structures', 'large, oval-shaped yeast cells', 'cell contents are homogeneous', 'presence of irregularly shaped cell walls', 'thin, flat plates with irregularly shaped crystals', 'appear as tiny dots or specks', 'edges of crystals are sharp and well-defined', 'appear as a uniform, featureless background', 'randomly arranged, chaotic clusters of filaments', 'gram-positive, stain dark blue', 'swirling patterns of thin, wispy filaments', 'curly germination phenotype, chaotic germination tube growth', 'web-like structures with interconnected nodes', 'very short, at most one branching event', 'two to several tubes per spore, tubes grow from a few localized points irregularly distributed on the spore surface', 'network displays varying thickness across the sample', 'a clear, gelatinous layer covers the fibrous core', 'isolated spores, some overlap possible', 'show little to no contrast', 'round, smaller than usual, often hidden by tubes', 'extremely short to non-existent, no branching events, straight', 'cells appear densely packed with minimal expansion', 'thin, rod-shaped yeast cells', 'uniform in size and shape', 'lack of defined boundaries', 'spores retain their original size without enlargement', 'the shape is rounded with varied-sized bulging clusters', 'filaments branch out extensively creating a network', 'structure appears as tightly packed crystalline shards', 'structure consists of densely intertwined threads', 'the arrangement displays a radial pattern emanating from central points', 'little to no budding or branching observed in cells', 'no distinctive staining patterns', 'no emergence of hyphae from the spores', 'texture appears fibrous and stringy', 'the structure shows a dense network of interwoven filaments', 'all tubes branch, overlap and connect, growing very far out of their original spore, creating a branching structure with rather stable density across the whole image', 'cell walls thin, transparent', 'no distinctive features', 'no significant differences in cell shape', 'cells are tightly packed together', 'round, large', 'round, small, of rather uniform size and shape', 'no visible flagella or appendages', 'fibrous networks with branching patterns', 'appear as small, dark spots', 'fine, delicate threads with intricate branching', 'only spores, no germ tube growth', 'overall structure maintains a compact, undeveloped form', 'isolated spores, very little overlap', 'thin, flat plates with smooth edges', 'some crystals show thin, elongated shapes', 'overall arrangement gives a fragmented, mosaic-like appearance', 'crystals form sharp, angular edges', 'one or two tubes per spore, growing from opposite points on the spore surface, at most one branching event', 'smaller particles are scattered around larger crystal formations', 'irregularly shaped, budding yeast cells with dark edges', 'size: 0.5-1.5 μm in length', 'irregularly shaped crystals with smooth, rounded edges', 'irregularly shaped crystals with smooth surfaces', 'curly, with several branching events, short', 'no visible staining or pigmentation', 'branching, tree-like structures with thickened tips', 'thread-like structures with irregular shapes', 'no visible structures or features', 'irregularly shaped, budding yeast cells', 'clumped, round yeast cells with dark centers', 'small, round cells with smooth edges', 'crystals form angular, geometric patterns', 'swelling star phenotype, swelling spores with several germination tubes around', 'needle-like crystals with curved surfaces', 'some areas feature a granular texture with bead-like elements', 'thin, delicate filaments with nodes', 'swelling, variable shape and size, some spores are ovoidal', 'no visible budding or division', 'appear as single cells or pairs', 'isolated spores, some overlap possible', 'filaments appear smooth and thread-like at high magnification', 'structure displays a layered, stratified appearance', 'extremely long, with several branching events, growing rather linearly with possibly some irregular curly patterns', 'irregular, amorphous shapes with no clear structure', 'no visible movement or activity', 'appear as uniform, dark-stained colonies', 'needle-like crystals with sharp edges', 'cells are compact and tightly packed', 'thick, irregularly shaped yeast cells', 'clusters of cells show no outward growth', 'isolated spores, some overlap possible', 'cells have a uniform shape', 'clumped, round yeast cells', 'irregularly shaped crystals with rough surfaces', 'no significant variation in size', 'needle-like crystals with pointed tips', 'appear as a uniform, dark-stained colonies', 'small, round or oval-shaped organisms', 'rather isolated, with a clear tendency to form clusters']
+200 images for base training.
+200 images for base testing.
+400 images for novel testing.
+600 images for all testing.
+base_classes [1, 4]
+novel_classes [0, 2, 3, 5]
+Extract image features...
+Extract image features...
+Extract image features...
+Extract image features...
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([2800, 512])
+self.targets[idx] torch.Size([2800])
+self.features[idx] torch.Size([4200, 512])
+self.targets[idx] torch.Size([4200])
+norm_embedding torch.Size([4200, 128])
+similarity_matrix torch.Size([4200, 4200])
+retrieval_results torch.Size([4200, 1])
+Accuracy: 0.8469047619047619
+Total number of test samples: 4200
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+label_to_avg_imagewithattributes torch.Size([128])
+label_to_avg_imagewithattributes torch.Size([128])
+label_to_avg_imagewithattributes torch.Size([128])
+label_to_avg_imagewithattributes torch.Size([128])
+label_to_avg_imagewithattributes torch.Size([128])
+label_to_avg_imagewithattributes torch.Size([128])
+top_indices tensor([107,  98, 101,   7,  20,  63])
+top_indices tensor([107,  98,   7,  63,  20,  88])
+top_indices tensor([ 24,  98,  63,   7, 109,  68])
+top_indices tensor([98,  7, 88, 24, 33, 54])
+top_indices tensor([107,  98,  20,  63,   7, 101])
+top_indices tensor([ 98,  20, 107,  63,   7, 101])
+{0: (tensor([0.3031, 0.3024, 0.3017, 0.3008, 0.2981, 0.2964]), ['appear as single cells or pairs', 'clumped, round yeast cells with dark centers', 'swelling star phenotype, swelling spores with several germination tubes around', 'small, round yeast cells with dark centers', 'absence of growth medium penetration by any hyphal structures', 'little to no budding or branching observed in cells']), 1: (tensor([0.3024, 0.3013, 0.2989, 0.2989, 0.2983, 0.2972]), ['appear as single cells or pairs', 'clumped, round yeast cells with dark centers', 'small, round yeast cells with dark centers', 'little to no budding or branching observed in cells', 'absence of growth medium penetration by any hyphal structures', 'irregularly shaped, budding yeast cells with dark edges']), 2: (tensor([0.2985, 0.2977, 0.2972, 0.2960, 0.2950, 0.2927]), ['large, irregularly shaped yeast cells with dark edges', 'clumped, round yeast cells with dark centers', 'little to no budding or branching observed in cells', 'small, round yeast cells with dark centers', 'filaments appear smooth and thread-like at high magnification', 'all tubes branch, overlap and connect, growing very far out of their original spore, creating a branching structure with rather stable density across the whole image']), 3: (tensor([0.3008, 0.2992, 0.2944, 0.2921, 0.2861, 0.2839]), ['clumped, round yeast cells with dark centers', 'small, round yeast cells with dark centers', 'irregularly shaped, budding yeast cells with dark edges', 'large, irregularly shaped yeast cells with dark edges', 'large, oval-shaped yeast cells', 'thin, rod-shaped yeast cells']), 4: (tensor([0.3064, 0.3058, 0.3055, 0.3038, 0.3025, 0.3024]), ['appear as single cells or pairs', 'clumped, round yeast cells with dark centers', 'absence of growth medium penetration by any hyphal structures', 'little to no budding or branching observed in cells', 'small, round yeast cells with dark centers', 'swelling star phenotype, swelling spores with several germination tubes around']), 5: (tensor([0.3029, 0.3027, 0.3016, 0.3013, 0.3003, 0.2997]), ['clumped, round yeast cells with dark centers', 'absence of growth medium penetration by any hyphal structures', 'appear as single cells or pairs', 'little to no budding or branching observed in cells', 'small, round yeast cells with dark centers', 'swelling star phenotype, swelling spores with several germination tubes around'])}
+torch.Size([4200, 128])
+random_state_value 5311

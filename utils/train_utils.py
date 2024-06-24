@@ -97,7 +97,7 @@ def get_feature_dataloader(cfg):
         base_test_score_dataset = FeatureDataset(base_test_features, base_test_labels)
         novel_test_score_dataset = FeatureDataset(novel_test_features, novel_test_labels)
         all_test_score_dataset = FeatureDataset(all_test_features, test_images_labels)
-        print("novel_test_labels",novel_test_labels)  
+        #print("novel_test_labels",novel_test_labels)  
         
 
     base_train_loader = DataLoader(base_train_score_dataset, batch_size=cfg['batch_size'], shuffle=True)

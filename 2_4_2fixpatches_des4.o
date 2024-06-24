@@ -1,0 +1,76 @@
+{'dataset': 'fungi', 'attributes': 'fungi', 'cluster_feature_method': 'linear', 'model_type': 'clip', 'model_size': 'ViT-B/32', 'mahalanobis': True, 'division_power': 2, 'linear_epochs': 50, 'reinit': False, 'num_attributes': 4, 'seed': 1, 'lr': 0.001, 'batch_size': 4, 'epochs': 125, 'linear_model': ['linear', 'linear'], 'score_model': ['linear'], 'json_file': '/export/home/ra79nod/proj/LM4CV_similarity/data/fungi/split_zhou_Fungi.json', 'ROOT': '/export/group/datasets/microbiology/images_png', 'use_voting': False, 'with_attributes': True, 'evaluate_with_novel_classes': False, 'IMP_SAMP_fix': True, 'use_patches': True, 'n_crops_per_image': 7, 'use_few_shot': False, 'umap': True}
+num_attributes:  4
+200 images for base training.
+200 images for base testing.
+400 images for novel testing.
+600 images for all testing.
+base_classes [0, 5]
+novel_classes [1, 2, 3, 4]
+Extract image features...
+Extract image features...
+Extract image features...
+Extract image features...
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([2800, 512])
+self.targets[idx] torch.Size([2800])
+self.features[idx] torch.Size([4200, 512])
+self.targets[idx] torch.Size([4200])
+mahalanobis:
+Epoch [0], Best accuracy: 50.0, Last accuracy: 50.0
+Epoch [10], Best accuracy: 62.85714340209961, Last accuracy: 58.142860412597656
+Epoch [20], Best accuracy: 62.85714340209961, Last accuracy: 54.857139587402344
+selected_attributions: ['cell membranes are thin and continuous', 'mycelium growth, branching structures, no compound effect', 'large, irregularly shaped yeast cells with dark edges', 'swelling spores of different shapes, from round to ovoidal, irregular distribution of germination tubes']
+200 images for base training.
+200 images for base testing.
+400 images for novel testing.
+600 images for all testing.
+base_classes [0, 5]
+novel_classes [1, 2, 3, 4]
+Extract image features...
+Extract image features...
+Extract image features...
+Extract image features...
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([1400, 512])
+self.targets[idx] torch.Size([1400])
+self.features[idx] torch.Size([2800, 512])
+self.targets[idx] torch.Size([2800])
+self.features[idx] torch.Size([4200, 512])
+self.targets[idx] torch.Size([4200])
+norm_embedding torch.Size([4200, 4])
+similarity_matrix torch.Size([4200, 4200])
+retrieval_results torch.Size([4200, 1])
+Accuracy: 0.6216666666666667
+eachclass_accuracy: {0: 0.51, 1: 0.5371428571428571, 2: 0.8657142857142858, 3: 0.7771428571428571, 4: 0.4957142857142857, 5: 0.5442857142857143}
+Total number of test samples: 4200
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+embeddings_tensor torch.Size([700, 512])
+norm_embeddings_tensor torch.Size([700, 512])
+label_to_avg_imagewithattributes torch.Size([4])
+label_to_avg_imagewithattributes torch.Size([4])
+label_to_avg_imagewithattributes torch.Size([4])
+label_to_avg_imagewithattributes torch.Size([4])
+label_to_avg_imagewithattributes torch.Size([4])
+label_to_avg_imagewithattributes torch.Size([4])
+top_indices tensor([2])
+top_indices tensor([2])
+top_indices tensor([2])
+top_indices tensor([2])
+top_indices tensor([2])
+top_indices tensor([2])
+{0: (tensor([0.2920]), ['large, irregularly shaped yeast cells with dark edges']), 1: (tensor([0.2954]), ['large, irregularly shaped yeast cells with dark edges']), 2: (tensor([0.2985]), ['large, irregularly shaped yeast cells with dark edges']), 3: (tensor([0.2921]), ['large, irregularly shaped yeast cells with dark edges']), 4: (tensor([0.3014]), ['large, irregularly shaped yeast cells with dark edges']), 5: (tensor([0.2966]), ['large, irregularly shaped yeast cells with dark edges'])}
+imagewithattributes_embeddings torch.Size([4200, 4])
+random_state_value 4012

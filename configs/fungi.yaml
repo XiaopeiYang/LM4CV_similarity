@@ -6,9 +6,9 @@ model_type: clip
 model_size: ViT-B/32
 mahalanobis: True
 division_power: 2
-linear_epochs: 20 #50
+linear_epochs: 50 #50
 reinit: False # True/False
-num_attributes: 64 # [16, 32, 64, 128, 256, 512]
+num_attributes: 4 # [16, 32, 64, 128, 256, 512]
 seed: 1
 
 # optimization parameters
@@ -25,11 +25,11 @@ ROOT: "/export/group/datasets/microbiology/images_png"
 
 use_voting: False
 
-with_attributes: False
-evaluate_with_novel_classes: True
+with_attributes: True
+evaluate_with_novel_classes: False
 
-IMP_SAMP_fix: False
+IMP_SAMP_fix: True
 use_patches: True
 n_crops_per_image: 7
 use_few_shot: False
-
+umap: True
