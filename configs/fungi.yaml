@@ -8,7 +8,7 @@ mahalanobis: True
 division_power: 2
 linear_epochs: 50 #50
 reinit: False # True/False
-num_attributes: 4 # [16, 32, 64, 128, 256, 512]
+num_attributes: 16 # [16, 32, 64, 128, 256, 512]
 seed: 1
 
 # optimization parameters
@@ -32,4 +32,4 @@ IMP_SAMP_fix: True
 use_patches: True
 n_crops_per_image: 7
 use_few_shot: False
-umap: True
+umap: False

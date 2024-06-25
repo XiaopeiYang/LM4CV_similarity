@@ -13,10 +13,10 @@ from sklearn.preprocessing import StandardScaler
 
 label_mapping = {
     0: "Caspofungin",
-    1: "Carbendazim(unknown)",
+    1: "Carbendazim",
     2: "Mycelium(unknown)",
     3: "Germination Inhibition(unknown)",
-    4: "GWT1(unknown)",
+    4: "GWT1",
     5: "Tebuconazole"
 }
 
@@ -69,6 +69,8 @@ def calculate_eachclass_accuracy(retrieval_results, labels):
     
     for idx, retrieved_indices in enumerate(retrieval_results):
         label = labels[idx].item()
+        #print("label",label)
+        #print("labels[retrieved_indices]",labels[retrieved_indices])
         if label not in class_correct:
             class_correct[label] = 0
             class_total[label] = 0

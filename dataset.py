@@ -158,8 +158,8 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
     random.shuffle(all_labels)
     
     num_base_classes = 2
-    base_classes =[0,5]
-    novel_classes = [1,2,3,4]
+    base_classes =[0, 5]
+    novel_classes = [1, 2, 3, 4]
     
     #num_base_classes = int(len(all_labels) * base_ratio)
     #base_classes = all_labels[:num_base_classes]
