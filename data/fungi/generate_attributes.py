@@ -69,3 +69,6 @@ def obtain_descriptors_and_save(filename, class_list):
         json.dump(descriptors, fp)
 
 obtain_descriptors_and_save('example', ["Caspofungin", "Carbendazim", "Mycelium", "Germination Inhibition", "GWT1", "Tebuconazole"])
+
+# sk-proj-xkNCqlUVPb8KiWoVYHs7T3BlbkFJEE6IZlJKkJjr9d3e9019
+# export OPENAI_API_KEY = "sk-proj-xkNCqlUVPb8KiWoVYHs7T3BlbkFJEE6IZlJKkJjr9d3e9019"

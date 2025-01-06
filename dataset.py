@@ -6,30 +6,7 @@ import imp_samp
 import os
 import json
 import random
-import argparse
-import yaml 
-
-def parse_config():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config",
-                        default='./configs/fungi.yaml',
-                        help='configurations for training')
-    return parser.parse_args()
-args = parse_config()
-with open(f'{args.config}', "r") as stream:
-    try:
-        cfg = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
-        
-#IMP_SAMP_fix = True
-#use_patches = False
-#n_crops_per_image = 7
-#use_few_shot = False
-IMP_SAMP_fix = cfg['IMP_SAMP_fix']
-use_patches = cfg['use_patches']
-use_few_shot = cfg['use_few_shot']
-n_crops_per_image = cfg['n_crops_per_image']
+from config import cfg
 
 imp_samp_params = {
     "patch_size": 512,
@@ -37,7 +14,7 @@ imp_samp_params = {
     "scale_dog": 1,
     "grid_sep": 256,
     "map_type": "importance",
-    "patches_per_image": n_crops_per_image,
+    "patches_per_image": cfg['n_crops_per_image'],
     "blur_samp_map": False,
     "seed": 123
 }
@@ -67,7 +44,7 @@ def important_random_size_crops_per_image(image, n_crops, imp_samp_params):
 class FungiSmall(Dataset):
     """dataset for fungi"""
 
-    def __init__(self, images_path: list, images_class: list, transform=None, use_patches=use_patches):
+    def __init__(self, images_path: list, images_class: list, transform=None, use_patches=cfg['use_patches']):
         self.images_path = images_path
         self.images_class = images_class
         self.transform = transform
@@ -83,10 +60,10 @@ class FungiSmall(Dataset):
         """Generates all important patches and their labels."""
         if self.use_patches:
             for img_path, img_label in zip(self.images_path, self.images_class):
-                if IMP_SAMP_fix:
-                    patches = important_crops_per_image(img_path, n_crops_per_image, imp_samp_params)
+                if cfg['IMP_SAMP_fix']:
+                    patches = important_crops_per_image(img_path, cfg['n_crops_per_image'], imp_samp_params)
                 else:
-                    patches = important_random_size_crops_per_image(img_path, n_crops_per_image, imp_samp_params)
+                    patches = important_random_size_crops_per_image(img_path, cfg['n_crops_per_image'], imp_samp_params)
                 for patch in patches:
                     self.patches.append(patch)
                     self.labels.append(img_label)  # Assuming the same label for all patches from the same image
@@ -124,7 +101,7 @@ def remap_labels(labels, class_map):
     remapped_labels = [class_map[label] for label in labels]
     return remapped_labels
 
-def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: int = 42, few_shot: int = 10):
+def read_split_data(json_file: str, root: str, base_ratio: float = cfg['base_ratio'], seed: int = cfg['base_ratio_seed'], few_shot: int = 10):
     # Check if paths exist
     assert os.path.exists(json_file), f"JSON file: {json_file} does not exist."
     assert os.path.exists(root), f"Root path: {root} does not exist."
@@ -147,7 +124,7 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
         train_images_labels.append(item[1])
 
     # Process test data
-    for item in data['test']:
+    for item in data['val']:
         full_path = os.path.join(root, item[0])
         test_images_paths.append(full_path)
         test_images_labels.append(item[1])
@@ -157,13 +134,13 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
     random.seed(seed)
     random.shuffle(all_labels)
     
-    num_base_classes = 2
-    base_classes =[0, 5]
-    novel_classes = [1, 2, 3, 4]
+    # num_base_classes = 3
+    # base_classes =[0,1,5]
+    # novel_classes = [2,3,4]
     
-    #num_base_classes = int(len(all_labels) * base_ratio)
-    #base_classes = all_labels[:num_base_classes]
-    #novel_classes = all_labels[num_base_classes:]
+    num_base_classes = int(len(all_labels) * base_ratio)
+    base_classes = all_labels[:num_base_classes]
+    novel_classes = all_labels[num_base_classes:]
     
     # Sort base and novel classes to get the desired order
     base_classes.sort()
@@ -181,7 +158,7 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
     base_test_paths, base_test_labels = [], []
     novel_test_paths, novel_test_labels = [], []
             
-    if use_few_shot: 
+    if cfg['use_few_shot']: 
         # Collect few-shot samples for training
         base_class_samples = {label: [] for label in range(num_base_classes)}
     
@@ -213,9 +190,10 @@ def read_split_data(json_file: str, root: str, base_ratio: float = 0.5, seed: in
 
     #print(f"{len(base_test_paths)} images for base testing.")
     #print(f"{len(novel_test_paths)} images for novel testing.")
-
-    return (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels),  (test_images_paths, test_images_labels),base_classes, novel_classes
-
+    if base_ratio != 1.0:
+        return (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels),  (test_images_paths, test_images_labels),(train_images_paths,train_images_labels),base_classes, novel_classes
+    else:
+        return (base_train_paths, base_train_labels), (base_test_paths, base_test_labels)
 
 
 class OnlineScoreDataset(Dataset):
@@ -242,8 +220,8 @@ class FeatureDataset(torch.utils.data.Dataset):
         #print("target:", targets)
         self.targets = torch.tensor(targets)
         self.group_array = group_array
-        print("self.features[idx]",self.features.size())
-        print("self.targets[idx]",self.targets.size()) 
+        #print("self.features[idx]",self.features.size())
+        #print("self.targets[idx]",self.targets.size()) 
 
     def __getitem__(self, idx):
         if self.group_array is not None:

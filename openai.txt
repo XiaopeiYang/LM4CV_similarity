@@ -1,2 +1,0 @@
-sk-proj-xkNCqlUVPb8KiWoVYHs7T3BlbkFJEE6IZlJKkJjr9d3e9019
-export OPENAI_API_KEY = "sk-proj-xkNCqlUVPb8KiWoVYHs7T3BlbkFJEE6IZlJKkJjr9d3e9019"

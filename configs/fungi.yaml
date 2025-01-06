@@ -6,9 +6,9 @@ model_type: clip
 model_size: ViT-B/32
 mahalanobis: True
 division_power: 2
-linear_epochs: 50 #50
-reinit: False # True/False
-num_attributes: 16 # [16, 32, 64, 128, 256, 512]
+linear_epochs: 50 
+reinit: True # True/False
+num_attributes: 64 # [16, 32, 64, 128, 256, 512]
 seed: 1
 
 # optimization parameters
@@ -20,16 +20,30 @@ epochs: 125
 linear_model: [linear, linear] 
 score_model: [linear]
 
-json_file: "/export/home/ra79nod/proj/LM4CV_similarity/data/fungi/split_zhou_Fungi.json"
-ROOT: "/export/group/datasets/microbiology/images_png"
+json_file: "/export/home/xyang/hiwi/LM4CV_similarity/data/fungi/split_zhou_Fungi.json" #100 samples per class for testing;100 samples per class for training
+ROOT: "/export/compvis-nfs/group/datasets/microbiology_big/images_png" #image path
+
+use_patches: False # [True, False]whether use patches or not
+IMP_SAMP_fix: True # [True, False]when use patches,whether use the fix patches method
+n_crops_per_image: 7 # number of crops per image
 
 use_voting: False
 
-with_attributes: True
-evaluate_with_novel_classes: False
+base_ratio: 0.4 # the ratio of the base train class, when base_ratio=0.5, the ratio of the novel class is 0.5. when base_ratio=1.0, the ratio of the novel class is 0.0
+base_ratio_seed: 42 #Change this seed to get different base/novel combinations.
+use_few_shot: False #whether use few shot learning or not, for 10-shot
 
-IMP_SAMP_fix: True
-use_patches: True
-n_crops_per_image: 7
-use_few_shot: False
-umap: False
+
+evaluate_with_novel_classes: False #whether evaluate only with novel classes or with whole classes
+with_attributes: True #based on the attributes or not
+umap: True #generate umap or not
+
+without_zscore: True #umap generated without generization
+with_zscore: True #umap generated without generization
+testing_samples_per_class: 100 # the number of testing samples per class, determined by 'split_zhou_Fungi.json'
+
+
+attribute_similarity_scores: True #Whether to calculate the similarity of each attribute to the class or not.
+
+
+knn-classifier: True #whether use knn classifier or not

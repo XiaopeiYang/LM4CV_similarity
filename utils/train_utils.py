@@ -83,30 +83,68 @@ def get_feature_dataloader(cfg):
     test_features = get_image_embeddings(cfg, cfg['dataset'], model, test_loader, 'test')
     '''
     #for fungi
-    base_train_loader,base_test_loader, novel_test_loader,all_test_loader = get_image_dataloader(cfg['dataset'], preprocess)
-
-    base_train_features = get_image_embeddings(cfg, cfg['dataset'], model, base_train_loader, 'base_train')
-    base_test_features = get_image_embeddings(cfg, cfg['dataset'], model, base_test_loader, 'base_test')
-    novel_test_features = get_image_embeddings(cfg, cfg['dataset'], model, novel_test_loader, 'novel_test')
-    all_test_features = get_image_embeddings(cfg, cfg['dataset'], model, all_test_loader, 'all_test')
-    ####
-    
-    if cfg['dataset'] == 'fungi':
-        base_train_labels,base_test_labels,novel_test_labels,test_images_labels = get_labels(cfg['dataset'])
-        base_train_score_dataset = FeatureDataset(base_train_features, base_train_labels)
-        base_test_score_dataset = FeatureDataset(base_test_features, base_test_labels)
-        novel_test_score_dataset = FeatureDataset(novel_test_features, novel_test_labels)
-        all_test_score_dataset = FeatureDataset(all_test_features, test_images_labels)
-        #print("novel_test_labels",novel_test_labels)  
+    if cfg['base_ratio'] == 1.0:
+        base_train_loader,base_test_loader = get_image_dataloader(cfg['dataset'], preprocess)
+        base_train_features = get_image_embeddings(cfg, cfg['dataset'], model, base_train_loader, 'base_train')
+        base_test_features = get_image_embeddings(cfg, cfg['dataset'], model, base_test_loader, 'base_test')
         
+        base_train_labels,base_test_labels = get_labels(cfg['dataset'])
+        
+        base_train_dataset = FeatureDataset(base_train_features, base_train_labels)
+        base_test_dataset = FeatureDataset(base_test_features, base_test_labels)
+        base_train_loader = DataLoader(base_train_dataset, batch_size=cfg['batch_size'], shuffle=True)
+        base_test_loader = DataLoader(base_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+        return base_train_loader,base_test_loader
+    else:
+        base_train_loader,base_test_loader, novel_test_loader,all_test_loader,all_train_loader = get_image_dataloader(cfg['dataset'], preprocess)
+        base_train_features = get_image_embeddings(cfg, cfg['dataset'], model, base_train_loader, 'base_train')
+        base_test_features = get_image_embeddings(cfg, cfg['dataset'], model, base_test_loader, 'base_test')
+        novel_test_features = get_image_embeddings(cfg, cfg['dataset'], model, novel_test_loader, 'novel_test')
+        all_test_features = get_image_embeddings(cfg, cfg['dataset'], model, all_test_loader, 'all_test')
+        all_train_features = get_image_embeddings(cfg, cfg['dataset'], model, all_train_loader, 'all_train')
+    ####
+        base_train_labels,base_test_labels,novel_test_labels,test_images_labels,train_images_labels = get_labels(cfg['dataset'])
+        base_train_dataset = FeatureDataset(base_train_features, base_train_labels)
+        base_test_dataset = FeatureDataset(base_test_features, base_test_labels)
+        novel_test_dataset = FeatureDataset(novel_test_features, novel_test_labels)
+        all_test_dataset = FeatureDataset(all_test_features, test_images_labels)
+        all_train_dataset = FeatureDataset(all_train_features, train_images_labels)
+        
+        base_train_loader = DataLoader(base_train_dataset, batch_size=cfg['batch_size'], shuffle=True)
+        base_test_loader = DataLoader(base_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+        novel_test_loader = DataLoader(novel_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+        all_test_loader = DataLoader(all_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+        all_train_loader = DataLoader(all_train_dataset, batch_size=cfg['batch_size'], shuffle=False)
 
-    base_train_loader = DataLoader(base_train_score_dataset, batch_size=cfg['batch_size'], shuffle=True)
-    base_test_loader = DataLoader(base_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
-    novel_test_loader = DataLoader(novel_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
-    all_test_loader = DataLoader(all_test_score_dataset, batch_size=cfg['batch_size'], shuffle=False)
+        return base_train_loader,base_test_loader,novel_test_loader,all_test_loader,all_train_loader
 
-    return base_train_loader,base_test_loader,novel_test_loader,all_test_loader
+def get_novel_test_feature_dataloader(cfg):
+    if cfg['model_type'] == 'clip':
+        model, preprocess = clip.load(cfg['model_size'])
+    elif cfg['model_type'] == 'open_clip':
+        model, _, preprocess = open_clip.create_model_and_transforms(cfg['model_size'], pretrained=cfg['openclip_pretrain'], device='cuda')
+    else:
+        raise NotImplementedError
+    _,_, novel_test_loader,_,_ = get_image_dataloader(cfg['dataset'], preprocess)
+    novel_test_features = get_image_embeddings(cfg, cfg['dataset'], model, novel_test_loader, 'novel_test')
+    _,_,novel_test_labels,_,_ = get_labels(cfg['dataset'])
+    novel_test_dataset = FeatureDataset(novel_test_features, novel_test_labels)
+    novel_test_loader = DataLoader(novel_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+    return novel_test_loader
 
+def get_all_test_feature_dataloader(cfg):
+    if cfg['model_type'] == 'clip':
+        model, preprocess = clip.load(cfg['model_size'])
+    elif cfg['model_type'] == 'open_clip':
+        model, _, preprocess = open_clip.create_model_and_transforms(cfg['model_size'], pretrained=cfg['openclip_pretrain'], device='cuda')
+    else:
+        raise NotImplementedError
+    _,_, _,all_test_loader,_ = get_image_dataloader(cfg['dataset'], preprocess)
+    all_test_features = get_image_embeddings(cfg, cfg['dataset'], model, all_test_loader, 'all_test')
+    _,_,_,test_images_labels,_ = get_labels(cfg['dataset'])
+    all_test_dataset = FeatureDataset(all_test_features, test_images_labels)
+    all_test_loader = DataLoader(all_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
+    return all_test_loader
 
 def get_score_dataloader(cfg, attribute_embeddings):
 

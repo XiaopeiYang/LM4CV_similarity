@@ -1,3 +1,6 @@
-_pycache_/
+**/__pycache__/
 result/
-
+openai.txt
+transform_plot/
+histogram/
+umap/

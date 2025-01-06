@@ -51,43 +51,57 @@ def clean_label(true_labels):
 def get_labels(dataset):
         
     # Read and split data into base and novel classes
-    (_, base_train_labels), (_, base_test_labels), (_, novel_test_labels),(_,test_images_labels) ,_, _ = read_split_data(json_file, ROOT)
+    if cfg['base_ratio'] == 1.0:
+        (_, base_train_labels), (_, base_test_labels)= read_split_data(json_file, ROOT)
+    else:
+        (_, base_train_labels), (_, base_test_labels), (_, novel_test_labels),(_,test_images_labels),(_,train_images_labels) ,_, _ = read_split_data(json_file, ROOT)
        
 
     if use_patches:
     # If using patches, generate multiple labels for each image
         expanded_base_train_labels = []
         expanded_base_test_labels = []
-        expanded_novel_test_labels = []
-        expanded_test_labels = []
-
         for label in base_train_labels:
             expanded_base_train_labels.extend([label] * n_crops_per_image)
 
         for label in base_test_labels:
             expanded_base_test_labels.extend([label] * n_crops_per_image)
-
-        for label in novel_test_labels:
-            expanded_novel_test_labels.extend([label] * n_crops_per_image)
-        for label in test_images_labels:
-            expanded_test_labels.extend([label] * n_crops_per_image)
         base_train_labels = expanded_base_train_labels
         base_test_labels = expanded_base_test_labels
-        novel_test_labels = expanded_novel_test_labels
-        test_images_labels = expanded_test_labels   
-
-    return base_train_labels,base_test_labels,novel_test_labels,test_images_labels
+        
+        if cfg['base_ratio'] != 1.0:
+            expanded_novel_test_labels = []
+            expanded_test_labels = []
+            expanded_train_labels = []
+            for label in novel_test_labels:
+                expanded_novel_test_labels.extend([label] * n_crops_per_image)
+            for label in test_images_labels:
+                expanded_test_labels.extend([label] * n_crops_per_image)
+            for label in train_images_labels:
+                expanded_train_labels.extend([label] * n_crops_per_image)
+            novel_test_labels = expanded_novel_test_labels
+            test_images_labels = expanded_test_labels 
+            train_images_labels = expanded_train_labels  
+    if cfg['base_ratio'] == 1.0:
+        return base_train_labels, base_test_labels
+    else: 
+        return base_train_labels,base_test_labels,novel_test_labels,test_images_labels,train_images_labels
 
 def get_image_dataloader(dataset, preprocess, preprocess_eval=None, shuffle=False):
     # Read and split data into base and novel classes
-    (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels),  (test_images_paths, test_images_labels),base_classes, novel_classes = read_split_data(json_file, ROOT)
+    if cfg['base_ratio'] == 1.0:
+        (base_train_paths, base_train_labels), (base_test_paths, base_test_labels) = read_split_data(json_file, ROOT)
+        print(f"{len(base_train_paths)} images for base training.")
+        print(f"{len(base_test_paths)} images for base testing.")
+    else:                   
+        (base_train_paths, base_train_labels), (base_test_paths, base_test_labels), (novel_test_paths, novel_test_labels),  (test_images_paths, test_images_labels),(train_images_paths,train_images_labels),base_classes, novel_classes = read_split_data(json_file, ROOT)
         
-    print(f"{len(base_train_paths)} images for base training.")
-    print(f"{len(base_test_paths)} images for base testing.")
-    print(f"{len(novel_test_paths)} images for novel testing.")
-    print(f"{len(test_images_labels)} images for all testing.")
-    print("base_classes", base_classes)
-    print("novel_classes", novel_classes)
+        print(f"{len(base_train_paths)} images for base training.")
+        print(f"{len(base_test_paths)} images for base testing.")
+        print(f"{len(novel_test_paths)} images for novel testing.")
+        print(f"{len(test_images_labels)} images for all testing.")
+        print("base_classes", base_classes)
+        print("novel_classes", novel_classes)
     ########################################
     #print("novel_test_paths", novel_test_paths)
     #print("novel_test_labels", novel_test_labels)
@@ -95,17 +109,22 @@ def get_image_dataloader(dataset, preprocess, preprocess_eval=None, shuffle=Fals
     # Create datasets
     base_trainset = FungiSmall(images_path=base_train_paths, images_class=base_train_labels, transform=preprocess)
     base_testset = FungiSmall(images_path=base_test_paths, images_class=base_test_labels, transform=preprocess)
-    novel_testset = FungiSmall(images_path=novel_test_paths, images_class=novel_test_labels, transform=preprocess)
-    all_testset = FungiSmall(images_path=test_images_paths, images_class=test_images_labels, transform=preprocess)
-
     # Create data loaders
-    base_train_loader = DataLoader(base_trainset, batch_size=4, shuffle=False)
-    base_test_loader = DataLoader(base_testset, batch_size=4, shuffle=False)
-    novel_test_loader = DataLoader(novel_testset, batch_size=4, shuffle=False)
-    all_test_loader = DataLoader(all_testset, batch_size=4, shuffle=False)
- 
-
-    return  base_train_loader,base_test_loader,novel_test_loader,all_test_loader
+    
+    base_train_loader = DataLoader(base_trainset, batch_size=24, shuffle=False)
+    base_test_loader = DataLoader(base_testset, batch_size=24, shuffle=False)
+    if cfg['base_ratio'] == 1.0:
+        return base_train_loader, base_test_loader
+    else:
+        # Create datasets
+        novel_testset = FungiSmall(images_path=novel_test_paths, images_class=novel_test_labels, transform=preprocess)
+        all_testset = FungiSmall(images_path=test_images_paths, images_class=test_images_labels, transform=preprocess)
+        all_trainset = FungiSmall(images_path=train_images_paths, images_class=train_images_labels, transform=preprocess)
+         # Create data loaders
+        novel_test_loader = DataLoader(novel_testset, batch_size=24, shuffle=False)
+        all_test_loader = DataLoader(all_testset, batch_size= 24, shuffle=False)
+        all_train_loader = DataLoader(all_trainset, batch_size=24, shuffle=False)
+        return base_train_loader, base_test_loader, novel_test_loader, all_test_loader, all_train_loader
 
 def get_output_dim(dataset):
     #print(len(np.unique(get_labels(dataset)[0])))
