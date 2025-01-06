@@ -39,10 +39,15 @@ Testing for classification accuracy:
 
 Testing image similarity (R@1) based on attribute space:
 - **evaluate_with_novel_classes** : choosing False means testing on whole classes, choosing True means testing only on novel classes.
-- **base_ratio**: Choose one from [0.1 ~ 0.9]. Choosing 0.5 means 3 base classes for training; choosing 0.7 means 4 base classes for training; choosing 0.4 means 2 base classes for training.
+- **base_ratio**: Choose one from [0.1 ~ 1.0]. Choosing 0.5 means 3 base classes for training; choosing 0.7 means 4 base classes for training; choosing 0.4 means 2 base classes for training.
 - **with_attributes**: Choosing True means evaluation based on attribute space.
-- **umap**: Choosing True means generating UMAP images based on image similarity.
 
+  run```python test.py  ```
+
+Generating UMAP images based on image similarity
+- **umap**: Choosing True means generating UMAP images based on image similarity.
+- **evaluate_with_novel_classes: False**: choosing False to show all classes in umap images.
+  
   run```python test.py  ```
 
 Testing the similarity of each attribute to the class:
@@ -60,9 +65,10 @@ Testing the similarity of each attribute to the class:
 
 Testing with knn-classifier:
 
+  Training with a base/novel split when applying KNN.
 - **nn-classifier** : choosing True means testing with knn-classifier 
 -  **base_ratio**: Choose one from [0.1 ~ 0.9]. Choosing 0.5 means 3 base classes for training; choosing 0.7 means 4 base classes for training; choosing 0.4 means 2 base classes for training.
-
+  
   run ```python knn.py  ```
 
 

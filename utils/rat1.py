@@ -155,21 +155,16 @@ def get_umap(cfg, attribute_embeddings, test_loader):
 
     image_embeddings = torch.cat(image_embeddings, dim=0)
     image_labels = torch.cat(image_labels, dim=0)
-    #print("image_embeddings",image_embeddings.size())
     image_embeddings = image_embeddings.float()
 
-    # Ensure image_embeddings are integer type for indexing
-    #print(f"Sample embeddings: {image_embeddings}")
-    #print(f"Sample labels: {image_labels}")
 
     # Map image_embeddings to attribute_embeddings space
     attribute_embeddings_tensor = attribute_embeddings.clone().detach()
     attribute_embeddings_tensor = attribute_embeddings_tensor.float()
     norm_image_embeddings = F.normalize(image_embeddings, p=2, dim=1)
     imagewithattributes_embeddings = torch.matmul(norm_image_embeddings, attribute_embeddings_tensor.t())
-    #print("imagewithattributes_embeddings",imagewithattributes_embeddings.size())
     random_state_value = random.randint(0, 10000)
-    #print("random_state_value",random_state_value)
+  
     if cfg['with_zscore']:
         #zero-mean and unit variance(z-score normalization)
         scaler = StandardScaler()

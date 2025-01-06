@@ -1,18 +1,5 @@
-import os
-import sys
-import pdb
-import yaml
 from utils.train_utils import *
 from cluster import cluster
-import torch
-import torch.nn.functional as F
-import umap
-import matplotlib.pyplot as plt
-import random
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import roc_auc_score
-from sklearn.neighbors import NearestCentroid
 
 def main(cfg):
 

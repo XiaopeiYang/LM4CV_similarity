@@ -1,18 +1,5 @@
-import os
-import sys
-import pdb
-import yaml
 from utils.train_utils import *
 from cluster import cluster
-import torch
-import torch.nn.functional as F
-import umap
-import matplotlib.pyplot as plt
-import random
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import roc_auc_score
-from sklearn.neighbors import NearestCentroid
 from utils.rat1 import *
 from utils.attribute_similarity_scores import *
 
@@ -28,20 +15,22 @@ def main(cfg):
         attributes, attributes_embeddings = cluster(cfg)
     
     if cfg['evaluate_with_novel_classes']:
-        novel_test_loader =get_novel_test_feature_dataloader(cfg)
-        accuracy, eachclass_accuracy = evaluate_on_classes(cfg, attributes_embeddings, novel_test_loader)
-        print(f"R@1 Accuracy: {accuracy}")
-        print(f"R@1 eachclass_accuracy: {eachclass_accuracy}")
-        # Additional suggestions to troubleshoot accuracy issues
-        print(f"Total number of test samples: {len(novel_test_loader.dataset)}")
+        if cfg['base_ratio'] != 1.0:
+            novel_test_loader =get_novel_test_feature_dataloader(cfg)
+            accuracy, eachclass_accuracy = evaluate_on_classes(cfg, attributes_embeddings, novel_test_loader)
+            print(f"R@1 Accuracy: {accuracy}")
+            print(f"R@1 eachclass_accuracy: {eachclass_accuracy}")
+            print(f"Total number of test samples: {len(novel_test_loader.dataset)}")
+        else:
+            print("Please set base_ratio to a value less than 1.0 to evaluate with novel classes.")
     else:
         all_test_loader = get_all_test_feature_dataloader(cfg)
         accuracy, eachclass_accuracy = evaluate_on_classes(cfg, attributes_embeddings, all_test_loader)
         print(f"R@1 Accuracy: {accuracy}")
         print(f"R@1 eachclass_accuracy: {eachclass_accuracy}")
-        # Additional suggestions to troubleshoot accuracy issues
         print(f"Total number of test samples: {len(all_test_loader.dataset)}")
-    if cfg['umap']:
+        
+    if cfg['umap'] and not cfg['evaluate_with_novel_classes']:
         get_umap(cfg, attributes_embeddings, all_test_loader)
         
          

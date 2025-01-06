@@ -139,9 +139,13 @@ def get_all_test_feature_dataloader(cfg):
         model, _, preprocess = open_clip.create_model_and_transforms(cfg['model_size'], pretrained=cfg['openclip_pretrain'], device='cuda')
     else:
         raise NotImplementedError
-    _,_, _,all_test_loader,_ = get_image_dataloader(cfg['dataset'], preprocess)
+    if cfg['base_ratio'] != 1.0:
+        _,_, _,all_test_loader,_ = get_image_dataloader(cfg['dataset'], preprocess)
+        _,_,_,test_images_labels,_ = get_labels(cfg['dataset'])
+    else:
+        _,all_test_loader = get_image_dataloader(cfg['dataset'], preprocess)
+        _,test_images_labels = get_labels(cfg['dataset'])    
     all_test_features = get_image_embeddings(cfg, cfg['dataset'], model, all_test_loader, 'all_test')
-    _,_,_,test_images_labels,_ = get_labels(cfg['dataset'])
     all_test_dataset = FeatureDataset(all_test_features, test_images_labels)
     all_test_loader = DataLoader(all_test_dataset, batch_size=cfg['batch_size'], shuffle=False)
     return all_test_loader
